@@ -6,7 +6,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this file,
 // You can obtain one at http://mozilla.org/MPL/2.0/.
 
-package httpexport
+package typebrowser
 
 import (
 	"bufio"
@@ -154,7 +154,6 @@ div[data-kind=func]				{ border-color: #7d0a72; }
 </style>
 </head><body>%s`, *t, submit)
 	typeToHtml := func(t *reflect.StructField, typeIndex, depth int) error {
-		// for now, we are error-ignorant
 		// close open tags
 		if session.depth > depth {
 			session.Concat(strings.Repeat("</div>", session.depth-depth))
@@ -206,7 +205,7 @@ div[data-kind=func]				{ border-color: #7d0a72; }
 		session.Concat(` class="` + classes + `">`)
 		return session.err
 	}
-	// ignore errors for the calls; we can't reasonably handle them unless we add a buffer
+	// walk the type
 	session.err = mirror.Walk(*t, typeToHtml)
 	if session.err != nil {
 		return session.err

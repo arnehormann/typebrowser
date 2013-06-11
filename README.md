@@ -1,10 +1,10 @@
 typebrowser
-==========
+===========
 
 View type information from your program in your browser!
 
 How do I use this?
-===
+------------------
 Call `NewTypeServer` and stuff things into the channel.
 Open your browser and point it to the port you specify.
 It's pretty simple.
