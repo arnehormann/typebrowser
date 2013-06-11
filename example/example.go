@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/arnehormann/httpexport"
+	"github.com/arnehormann/typebrowser"
 	"os/exec"
 	"reflect"
 	"runtime"
@@ -9,7 +9,7 @@ import (
 
 func main() {
 	addr := ":8080"
-	typechan := httpexport.NewTypeServer(addr)
+	typechan := typebrowser.NewTypeServer(addr)
 	// open in browser
 	cliOpener := "open"
 	if runtime.GOOS == "windows" {
