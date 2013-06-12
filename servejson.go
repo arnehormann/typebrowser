@@ -9,12 +9,9 @@
 package typebrowser
 
 import (
-	"bufio"
 	"fmt"
 	"github.com/arnehormann/mirror"
-	"net/http"
 	"reflect"
-	"strings"
 )
 
 func init() {

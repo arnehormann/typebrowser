@@ -9,10 +9,8 @@
 package typebrowser
 
 import (
-	"bufio"
 	"fmt"
 	"github.com/arnehormann/mirror"
-	"net/http"
 	"reflect"
 	"strings"
 )
@@ -23,7 +21,6 @@ func init() {
 
 func htmlTypeWriter(t *reflect.Type) (out string, err error) {
 	lastDepth := 0
-	session := &typeSession{}
 	Concat := func(text string) {
 		out += text
 	}
