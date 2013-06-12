@@ -29,9 +29,9 @@ func htmlTypeWriter(t *reflect.Type) (out string, err error) {
 	}
 	const submit = `<form method="post"><button type="submit">Next</button></form>`
 	if t == nil {
-		// serve form on GET requests so favicon.ico and co don't skip object under inspection
+		// serve form when no type is given so favicon.ico and others don't skip an object under inspection
 		Concat(`<!DOCTYPE html><html><body>` + submit + `</body></html>`)
-		return "", err
+		return out, err
 	}
 	// write leading...
 	Concatf(`

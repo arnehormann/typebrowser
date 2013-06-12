@@ -13,6 +13,15 @@ import (
 	"reflect"
 )
 
+type typeWriter func(t *reflect.Type) (string, error)
+
+var handlers = make(map[string]typeWriter)
+
+type typeServer struct {
+	feed  <-chan interface{}
+	write typeWriter
+}
+
 func NewTypeServer(addr string) chan<- interface{} {
 	typechan := make(chan interface{})
 	go func(addr string, inchan <-chan interface{}) {
@@ -23,15 +32,6 @@ func NewTypeServer(addr string) chan<- interface{} {
 		}
 	}(addr, typechan)
 	return typechan
-}
-
-type typeWriter func(t *reflect.Type) (string, error)
-
-var handlers = make(map[string]typeWriter)
-
-type typeServer struct {
-	feed  <-chan interface{}
-	write typeWriter
 }
 
 func (server typeServer) ServeHTTP(resp http.ResponseWriter, req *http.Request) {
