@@ -20,6 +20,9 @@ type chanSourcer struct {
 	write  func(t *reflect.Type) (string, error)
 }
 
+// make sure this is a http.Handler
+var _ http.Handler = &chanSourcer{}
+
 func (s *chanSourcer) NextString() string {
 	readType := reflect.TypeOf(<-s.inchan)
 	str, err := s.write(&readType)
@@ -47,8 +50,6 @@ func (s *chanSourcer) ServeHTTP(resp http.ResponseWriter, req *http.Request) {
 }
 
 var typeWriters = make(map[string]typeWriter)
-
-var _ http.Handler = &chanSourcer{}
 
 func NewTypeServer(addr string) chan<- interface{} {
 	typechan := make(chan interface{})
