@@ -23,5 +23,6 @@ func main() {
 		typechan <- complex128(0)
 		typechan <- reflect.Value{}
 		typechan <- ""
+		typechan <- 0
 	}
 }

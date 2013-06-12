@@ -33,17 +33,8 @@ func (s *chanSourcer) NextString() string {
 }
 
 func (s *chanSourcer) ServeHTTP(resp http.ResponseWriter, req *http.Request) {
-	var body string
-	var err error
-	if req.Method == "POST" {
-		body = s.NextString()
-	} else {
-		body, err = s.write(nil)
-		if err != nil {
-			panic(err)
-		}
-	}
-	_, err = resp.Write([]byte(body))
+	body := s.NextString()
+	_, err := resp.Write([]byte(body))
 	if err != nil {
 		panic(err)
 	}

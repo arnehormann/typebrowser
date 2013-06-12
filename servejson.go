@@ -52,25 +52,18 @@ func jsonTypeWriter(t *reflect.Type) (string, error) {
 		}
 		switch tt.Kind() {
 		case reflect.Func:
+			if tt.IsVariadic() {
+				opening += `,"varargs":true`
+			}
 			opening += `,"arguments":[`
 			for i, maxi := 0, tt.NumIn(); i < maxi; i++ {
 				arg := tt.In(i)
-				if i > 0 {
-					opening += `,`
-				}
-				opening += fmt.Sprintf(`{"gotype":%q`, arg.Name())
-				if arg.IsVariadic() {
-					opening += `,"variadic":true`
-				}
-				opening += `},`
+				opening += fmt.Sprintf(`%q,`, arg.Name())
 			}
 			opening = opening[:len(opening)-1] + `],"returns":[`
 			for i, maxi := 0, tt.NumOut(); i < maxi; i++ {
-				ret := tt.In(i)
-				if i > 0 {
-					opening += `,`
-				}
-				opening += fmt.Sprintf(`{"gotype":%q}`, ret.Name())
+				ret := tt.Out(i)
+				opening += fmt.Sprintf(`{"gotype":%q},`, ret.Name())
 			}
 			opening = opening[:len(opening)-1] + `]`
 		case reflect.Interface:

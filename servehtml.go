@@ -16,23 +16,19 @@ import (
 )
 
 func init() {
-	typeWriters[""] = htmlTypeWriter
 	typeWriters["html"] = htmlTypeWriter
 }
 
 func htmlTypeWriter(t *reflect.Type) (out string, err error) {
+	if t == nil {
+		return formWriter(nil)
+	}
 	lastDepth := 0
 	Concat := func(text string) {
 		out += text
 	}
 	Concatf := func(format string, args ...interface{}) {
 		out += fmt.Sprintf(format, args...)
-	}
-	const submit = `<form method="post"><button type="submit">Next</button></form>`
-	if t == nil {
-		// serve form when no type is given so favicon.ico and others don't skip an object under inspection
-		Concat(`<!DOCTYPE html><html><body>` + submit + `</body></html>`)
-		return out, err
 	}
 	// write leading...
 	Concatf(`
@@ -99,7 +95,7 @@ div[data-kind=func]				{ border-color: #7d0a72; }
 .hide * { display: none; }
 .parent.hide::after { content: ' [+]'; }
 </style>
-</head><body>%s`, *t, submit)
+</head><body><a href="">Next</a>`, *t)
 	typeToHtml := func(t *reflect.StructField, typeIndex, depth int) error {
 		// close open tags
 		if lastDepth > depth {
