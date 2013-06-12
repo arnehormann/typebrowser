@@ -15,10 +15,13 @@ import (
 )
 
 func init() {
-	handlers["json"] = jsonTypeWriter
+	typeWriters["json"] = jsonTypeWriter
 }
 
 func jsonTypeWriter(t *reflect.Type) (string, error) {
+	if t == nil {
+		return "{}", nil
+	}
 	lastDepth := 0
 	opening := ""
 	closing := ""

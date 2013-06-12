@@ -16,7 +16,8 @@ import (
 )
 
 func init() {
-	handlers["html"] = htmlTypeWriter
+	typeWriters[""] = htmlTypeWriter
+	typeWriters["html"] = htmlTypeWriter
 }
 
 func htmlTypeWriter(t *reflect.Type) (out string, err error) {

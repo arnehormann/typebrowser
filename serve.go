@@ -15,37 +15,51 @@ import (
 
 type typeWriter func(t *reflect.Type) (string, error)
 
-var handlers = make(map[string]typeWriter)
-
-type typeServer struct {
-	feed  <-chan interface{}
-	write typeWriter
+type chanSourcer struct {
+	inchan <-chan interface{}
+	write  func(t *reflect.Type) (string, error)
 }
 
-func NewTypeServer(addr string) chan<- interface{} {
-	typechan := make(chan interface{})
-	go func(addr string, inchan <-chan interface{}) {
-		server := typeServer{feed: inchan, write: handlers["html"]}
-		err := http.ListenAndServe(addr, server)
+func (s *chanSourcer) NextString() string {
+	readType := reflect.TypeOf(<-s.inchan)
+	str, err := s.write(&readType)
+	if err != nil {
+		panic(err)
+	}
+	return str
+}
+
+func (s *chanSourcer) ServeHTTP(resp http.ResponseWriter, req *http.Request) {
+	var body string
+	var err error
+	if req.Method == "POST" {
+		body = s.NextString()
+	} else {
+		body, err = s.write(nil)
 		if err != nil {
 			panic(err)
 		}
-	}(addr, typechan)
-	return typechan
+	}
+	_, err = resp.Write([]byte(body))
+	if err != nil {
+		panic(err)
+	}
 }
 
-func (server typeServer) ServeHTTP(resp http.ResponseWriter, req *http.Request) {
-	var t *reflect.Type
-	if req.Method == "POST" {
-		readType := reflect.TypeOf(<-server.feed)
-		t = &readType
+var typeWriters = make(map[string]typeWriter)
+
+var _ http.Handler = &chanSourcer{}
+
+func NewTypeServer(addr string) chan<- interface{} {
+	typechan := make(chan interface{})
+	muxer := http.NewServeMux()
+	for prefix, write := range typeWriters {
+		muxer.Handle("/"+prefix, &chanSourcer{inchan: typechan, write: write})
 	}
-	result, err := server.write(t)
-	if err != nil {
-		panic(err)
-	}
-	_, err = resp.Write([]byte(result))
-	if err != nil {
-		panic(err)
-	}
+	go func(addr string, handler http.Handler) {
+		if err := http.ListenAndServe(addr, handler); err != nil {
+			panic(err)
+		}
+	}(addr, muxer)
+	return typechan
 }
