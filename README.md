@@ -24,7 +24,7 @@ It depends on mirror, go-gettable with `go get github.com/arnehormann/mirror`.
 When you use it, it shows a site with a button per export format. the next type is fetched with an http-post, your program stops because it blocks on the channel until the next type is requested.
 
 For a working code example, see [example/example.go](example/example.go).
-For a peek at what the html output looks like, see [this demo for *reflect.StructField](http://bl.ocks.org/arnehormann/5775864).
+For a peek at what the html output looks like, see [this demo for *reflect.StructField](http://bl.ocks.org/arnehormann/raw/5775864/).
 Types containing others are foldable on click.
 
 For now, the JSON output is invalid. It's the next issue on my agenda.
