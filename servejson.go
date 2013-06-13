@@ -97,7 +97,7 @@ func jsonTypeWriter(t *reflect.Type) (string, error) {
 			}
 		case reflect.Map:
 			closing = "}" + closing
-			opening += fmt.Sprintf(`,"key":%q,"elem"=`, tt.Key())
+			opening += fmt.Sprintf(`,"key":%q,"elem":`, tt.Key())
 		case reflect.Invalid, reflect.Bool, reflect.Uintptr, reflect.UnsafePointer,
 			reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64,
 			reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64,

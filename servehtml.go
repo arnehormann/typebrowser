@@ -45,14 +45,17 @@ div[data-kind] {
 	line-height: 1.5em;
 	color: #444444;
 	/* defaults */
-	border: none;
 	border-color: #eeeeee;
+	padding: 0.5em 0 0 0.5em;
+	/* enterprisify it a little */
+	border: none;
 	border-left: 1.5em solid;
 	border-top: 4px solid;
-	padding: 0.5em 0 0 0.5em;
+	border-radius: 1em;
+	border-top-right-radius: 0;
 }
 div[data-kind]::before {
-	content: attr(data-kind) ': ' attr(data-field) ' ' attr(data-type);
+	content: '[' attr(data-kind) ', ' attr(data-memsize) ' bytes]: ' attr(data-field) ' ' attr(data-type);
 	position: relative;
 	margin-left: 1em;
 }
@@ -75,7 +78,6 @@ div[data-kind=complex64],
 div[data-kind=complex128]		{ border-color: #778c1b; }
 
 div[data-kind=bool]				{ border-color: #19758c; }
-div[data-kind=rune]				{ border-color: #4e398c; }
 div[data-kind=ptr]				{ border-color: #d96485; }
 
 div[data-kind=uintptr],
@@ -96,6 +98,7 @@ div[data-kind=func]				{ border-color: #7d0a72; }
 .parent.hide::after { content: ' [+]'; }
 </style>
 </head><body><a href="">Next</a>`, *t)
+	expectInFunc := [][2]int{}
 	typeToHtml := func(t *reflect.StructField, typeIndex, depth int) error {
 		// close open tags
 		if lastDepth > depth {
@@ -107,22 +110,28 @@ div[data-kind=func]				{ border-color: #7d0a72; }
 		if t == nil {
 			return nil
 		}
-
-		classes := ""
-
+		isParent := false
 		tt := t.Type
 		Concatf(
-			`<div data-kind="%s" data-type="%s" data-size="%d" data-typeid="%d"`,
+			`<div data-kind="%s" data-type="%s" data-memsize="%d" data-typeid="%d"`,
 			tt.Kind(), tt, tt.Size(), typeIndex)
+		if len(expectInFunc) <= depth {
+			expectInFunc = append(expectInFunc, [2]int{})
+		} else {
+			if expectInFunc[depth][0] > 0 {
+				expectInFunc[depth][0]--
+				Concat(` data-funcval="arg"`)
+			} else {
+				expectInFunc[depth][1]--
+				Concat(` data-funcval="ret"`)
+			}
+		}
 		if len(t.Index) > 0 {
 			Concatf(
 				` data-field="%s" data-index="%v" data-offset="%d" data-tag="%s"`,
 				t.Name, t.Index, t.Offset, t.Tag)
 		}
 		switch tt.Kind() {
-		case reflect.Array:
-			Concatf(` data-length="%d"`, tt.Len())
-			classes += "parent "
 		case reflect.Chan:
 			var direction string
 			switch tt.ChanDir() {
@@ -134,18 +143,30 @@ div[data-kind=func]				{ border-color: #7d0a72; }
 				direction = "both"
 			}
 			Concat(` data-direction="` + direction + `"`)
-			classes += "parent "
-		case reflect.Map:
-			Concatf(` data-keytype="%s"`, tt.Key())
-			classes += "parent "
+			isParent = true
 
 		case reflect.Func:
-			Concatf(` data-args-in="%d" data-args-out="%d"`, tt.NumIn(), tt.NumOut())
+			argcnt, retcnt := tt.NumIn(), tt.NumOut()
+			if len(expectInFunc) <= depth+1 {
+				expectInFunc = append(expectInFunc, [2]int{argcnt, retcnt})
+			} else {
+				expectInFunc[depth+1][0] = argcnt
+				expectInFunc[depth+1][1] = retcnt
+			}
+			Concatf(` data-argcount="%d" data-retcount="%d"`, argcnt, retcnt)
+			isParent = true
 
-		case reflect.Ptr, reflect.Slice, reflect.Struct:
-			classes += "parent "
+		case reflect.Array:
+			Concatf(` data-length="%d"`, tt.Len())
+			isParent = true
+
+		case reflect.Map, reflect.Ptr, reflect.Slice, reflect.Struct:
+			isParent = true
 		}
-		Concat(` class="` + classes + `">`)
+		if isParent {
+			Concat(` class="parent"`)
+		}
+		Concat(`>`)
 		return nil
 	}
 	// walk the type

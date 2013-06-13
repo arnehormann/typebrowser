@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/arnehormann/typebrowser"
+	"github.com.arnehormann/typebrowser"
 	"os/exec"
 	"reflect"
 	"runtime"
