@@ -15,13 +15,16 @@ import (
 )
 
 func init() {
+	/* DISABLE for now
 	typeConverters["json"] = typeConverter{
 		mime:    `application/json`,
 		convert: jsonConverter,
 	}
+	*/
 }
 
-func jsonConverter(t *reflect.Type) (string, error) {
+func jsonConverter(message string, t *reflect.Type) (string, error) {
+	// TODO: doesn't use message and format is broken
 	if t == nil {
 		return "{}", nil
 	}

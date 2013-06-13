@@ -11,6 +11,7 @@ package typebrowser
 import (
 	"fmt"
 	"github.com/arnehormann/mirror"
+	"html"
 	"reflect"
 	"strings"
 )
@@ -22,7 +23,7 @@ func init() {
 	}
 }
 
-func htmlConverter(t *reflect.Type) (out string, err error) {
+func htmlConverter(message string, t *reflect.Type) (out string, err error) {
 	if t == nil {
 		return `<!DOCTYPE html><html></html>`, nil
 	}
@@ -99,6 +100,9 @@ div[data-kind=func]				{ border-color: #7d0a72; }
 .fold::after { content: ' [+]'; }
 </style>
 </head><body>`+htmlForm+`<hr>`, *t)
+	if message != "" {
+		Concatf("<h3>%s</h3><hr>\n", html.EscapeString(message))
+	}
 	expectInFunc := [][2]int{}
 	typeToHtml := func(t *reflect.StructField, typeIndex, depth int) error {
 		// close open tags
@@ -114,8 +118,8 @@ div[data-kind=func]				{ border-color: #7d0a72; }
 		isParent := false
 		tt := t.Type
 		Concatf(
-			`<div data-kind="%s" data-type="%s" data-memsize="%d" data-typeid="%d"`,
-			tt.Kind(), tt, tt.Size(), typeIndex)
+			`<div data-kind="%s" data-type=%q data-memsize="%d" data-typeid="%d"`,
+			tt.Kind(), html.EscapeString(tt.String()), tt.Size(), typeIndex)
 		if len(expectInFunc) <= depth {
 			expectInFunc = append(expectInFunc, [2]int{})
 		} else {
