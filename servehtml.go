@@ -179,17 +179,17 @@ div[data-kind=func]				{ border-color: #7d0a72; }
 	Concat(`
 <script>
 (function(tags, tag){
-  function onChild(e) {
-  	e.stopPropagation()
-  }
-  function onParent(e) {
-	e.stopPropagation()
-	this.className = this.className == "fold" ? "" : "fold"
-  }
-  for (var i = 0; i < tags.length; i++) {
-  	tag = tags[i]
-  	tag.onclick = tag.children.length === 0 ? onChild : onParent
-  }
+	function onChild(e) {
+		e.stopPropagation()
+	}
+	function onParent(e) {
+		e.stopPropagation()
+		this.className = this.className == "fold" ? "" : "fold"
+	}
+	for (var i = 0; i < tags.length; i++) {
+		tag = tags[i]
+		tag.onclick = tag.children.length === 0 ? onChild : onParent
+	}
 })(document.getElementsByTagName('div'))
 </script></body></html>`)
 	return out, err
