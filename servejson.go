@@ -15,10 +15,13 @@ import (
 )
 
 func init() {
-	typeWriters["json"] = jsonTypeWriter
+	typeConverters["json"] = typeConverter{
+		mime:    `application/json`,
+		convert: jsonConverter,
+	}
 }
 
-func jsonTypeWriter(t *reflect.Type) (string, error) {
+func jsonConverter(t *reflect.Type) (string, error) {
 	if t == nil {
 		return "{}", nil
 	}

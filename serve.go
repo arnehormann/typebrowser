@@ -13,26 +13,33 @@ import (
 	"reflect"
 )
 
-type typeWriter func(t *reflect.Type) (string, error)
+type convert func(t *reflect.Type) (string, error)
 
-type chanSourcer struct {
-	inchan <-chan interface{}
-	write  func(t *reflect.Type) (string, error)
+type typeServer struct {
+	inchan  <-chan interface{}
+	mime    string
+	convert convert
 }
 
 // make sure this is a http.Handler
-var _ http.Handler = &chanSourcer{}
+var _ http.Handler = &typeServer{}
 
-func (s *chanSourcer) NextString() string {
+func (s *typeServer) NextString() string {
 	readType := reflect.TypeOf(<-s.inchan)
-	str, err := s.write(&readType)
+	str, err := s.convert(&readType)
 	if err != nil {
 		panic(err)
 	}
 	return str
 }
 
-func (s *chanSourcer) ServeHTTP(resp http.ResponseWriter, req *http.Request) {
+func (s *typeServer) ServeHTTP(resp http.ResponseWriter, req *http.Request) {
+	if req.Method != "POST" {
+		// redirect to root for now
+		resp.Header().Set("Location", "/")
+		return
+	}
+	resp.Header().Set("Content-Type", s.mime)
 	body := s.NextString()
 	_, err := resp.Write([]byte(body))
 	if err != nil {
@@ -40,14 +47,42 @@ func (s *chanSourcer) ServeHTTP(resp http.ResponseWriter, req *http.Request) {
 	}
 }
 
-var typeWriters = make(map[string]typeWriter)
+type formServer struct{}
+
+func (s formServer) ServeHTTP(resp http.ResponseWriter, req *http.Request) {
+	resp.Header().Set("Content-Type", "text/html")
+	_, err := resp.Write([]byte(`<!DOCTYPE html><html><body>` + htmlForm + `</body></html>`))
+	if err != nil {
+		panic(err)
+	}
+}
+
+var (
+	typeConverters = make(map[string]typeConverter)
+	htmlForm       = ""
+)
+
+type typeConverter struct {
+	mime    string
+	convert convert
+}
 
 func NewTypeServer(addr string) chan<- interface{} {
 	typechan := make(chan interface{})
 	muxer := http.NewServeMux()
-	for prefix, write := range typeWriters {
-		muxer.Handle("/"+prefix, &chanSourcer{inchan: typechan, write: write})
+	form := ""
+	for prefix, converter := range typeConverters {
+		form += `<form method=post action="/` +
+			prefix + `"><button type="submit">` +
+			prefix + `</button></form>`
+		muxer.Handle("/"+prefix, &typeServer{
+			inchan:  typechan,
+			mime:    converter.mime,
+			convert: converter.convert,
+		})
 	}
+	muxer.Handle("/", formServer{})
+	htmlForm = form
 	go func(addr string, handler http.Handler) {
 		if err := http.ListenAndServe(addr, handler); err != nil {
 			panic(err)

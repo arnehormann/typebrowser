@@ -16,12 +16,15 @@ import (
 )
 
 func init() {
-	typeWriters["html"] = htmlTypeWriter
+	typeConverters["html"] = typeConverter{
+		mime:    `text/html`,
+		convert: htmlConverter,
+	}
 }
 
-func htmlTypeWriter(t *reflect.Type) (out string, err error) {
+func htmlConverter(t *reflect.Type) (out string, err error) {
 	if t == nil {
-		return formWriter(nil)
+		return `<!DOCTYPE html><html></html>`, nil
 	}
 	lastDepth := 0
 	Concat := func(text string) {
@@ -95,7 +98,7 @@ div[data-kind=func]				{ border-color: #7d0a72; }
 .fold * { display: none; }
 .fold::after { content: ' [+]'; }
 </style>
-</head><body><a href="">Next</a>`, *t)
+</head><body>`+htmlForm+`<hr>`, *t)
 	expectInFunc := [][2]int{}
 	typeToHtml := func(t *reflect.StructField, typeIndex, depth int) error {
 		// close open tags
