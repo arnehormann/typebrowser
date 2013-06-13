@@ -93,9 +93,8 @@ div[data-kind=chan]				{ border-color: #9c0c40; }
 div[data-kind=interface]		{ border-color: #5d277d; }
 div[data-kind=func]				{ border-color: #7d0a72; }
 
-.parent { cursor: pointer; }
-.hide * { display: none; }
-.parent.hide::after { content: ' [+]'; }
+.fold * { display: none; }
+.fold::after { content: ' [+]'; }
 </style>
 </head><body><a href="">Next</a>`, *t)
 	expectInFunc := [][2]int{}
@@ -179,17 +178,19 @@ div[data-kind=func]				{ border-color: #7d0a72; }
 	// write closing code...
 	Concat(`
 <script>
-var parents = document.getElementsByClassName('parent');
-for(var i = 0; i < parents.length; i++) {
-    parents[i].onclick = function(e) {
-    	e.stopPropagation();
-
-    	// toggle class 'hide'
-    	this.className = (this.classList.contains('hide')) ?
-    		this.className.replace(/hide/,'') :
-    		this.className += ' hide';
-    }
-}
+(function(tags, tag){
+  function onChild(e) {
+  	e.stopPropagation()
+  }
+  function onParent(e) {
+	e.stopPropagation()
+	this.className = this.className == "fold" ? "" : "fold"
+  }
+  for (var i = 0; i < tags.length; i++) {
+  	tag = tags[i]
+  	tag.onclick = tag.children.length === 0 ? onChild : onParent
+  }
+})(document.getElementsByTagName('div'))
 </script></body></html>`)
 	return out, err
 }
