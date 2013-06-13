@@ -160,7 +160,7 @@ div[data-kind=func]				{ border-color: #7d0a72; }
 			Concatf(` data-length="%d"`, tt.Len())
 			isParent = true
 
-		case reflect.Map, reflect.Ptr, reflect.Slice, reflect.Struct:
+		case reflect.Map, reflect.Ptr, reflect.Slice, reflect.Struct, reflect.Interface:
 			isParent = true
 		}
 		if isParent {
