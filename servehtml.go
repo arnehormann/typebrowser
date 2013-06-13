@@ -31,8 +31,7 @@ func htmlTypeWriter(t *reflect.Type) (out string, err error) {
 		out += fmt.Sprintf(format, args...)
 	}
 	// write leading...
-	Concatf(`
-<!DOCTYPE html>
+	Concatf(`<!DOCTYPE html>
 <html><head><title>Go: '%s'</title><style>
 html { background-color: #fafafa; }
 div[data-kind] {
