@@ -27,9 +27,7 @@ var typechan = typebrowser.NewTypeServer(":8080")
 	// use it - feed anything to it!
 	typechan <- myvar
 	// if you want to know where in your program this is called from:
-	// declare a new type, assign your variable and pass state information as
-	// an inspectable type tag
-	typechan <- struct{value: interface{} `some file, some line, some state`}{myvar}
+	typechan <- typebrowser.Type{myvar, `some file, some line, some state`}
 ...
 ```
 Typebrowser can be installed by `go get github.com/arnehormann/typebrowser`.
