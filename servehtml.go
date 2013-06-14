@@ -62,32 +62,32 @@ div[data-kind]::before {
 	position: relative;
 	margin-left: 1em;
 }
-div[data-kind=int8]				{ border-color: hsl(180, 90%, 50%); }
-div[data-kind=int16]			{ border-color: hsl(180, 90%, 45%); }
-div[data-kind=int32]			{ border-color: hsl(180, 90%, 40%); }
-div[data-kind=int64]			{ border-color: hsl(180, 90%, 35%); }
-div[data-kind=int]				{ border-color: hsl(180, 75%, 38%); }
-div[data-kind=uint8]			{ border-color: hsl(190, 90%, 50%); }
-div[data-kind=uint16]			{ border-color: hsl(190, 90%, 45%); }
-div[data-kind=uint32]			{ border-color: hsl(190, 90%, 40%); }
-div[data-kind=uint64]			{ border-color: hsl(190, 90%, 35%); }
-div[data-kind=uint]				{ border-color: hsl(190, 75%, 38%); }
-div[data-kind=float32]			{ border-color: hsl(205, 70%, 40%); }
-div[data-kind=float64]			{ border-color: hsl(205, 70%, 35%); }
-div[data-kind=complex64]		{ border-color: hsl(215, 50%, 35%); }
-div[data-kind=complex128]		{ border-color: hsl(215, 50%, 30%); }
-div[data-kind=bool]				{ border-color: hsl(160, 70%, 35%); }
-div[data-kind=ptr]				{ border-color: hsl(30, 50%, 60%); }
-div[data-kind=uintptr]			{ border-color: hsl(20, 50%, 50%); }
-div[data-kind="unsafe.Pointer"]	{ border-color: hsl(10, 90%, 50%); }
-div[data-kind=array]			{ border-color: hsl(60, 90%, 45%); }
-div[data-kind=slice]			{ border-color: hsl(60, 40%, 60%); }
-div[data-kind=string]			{ border-color: hsl(120, 70%, 30%); }
-div[data-kind=map]				{ border-color: hsl(75, 40%, 40%); }
-div[data-kind=struct]			{ border-color: hsl(150, 10%, 45%); }
-div[data-kind=interface]		{ border-color: hsl(240, 30%, 60%); }
-div[data-kind=func]				{ border-color: hsl(270, 40%, 60%); }
-div[data-kind=chan]				{ border-color: hsl(300, 40%, 30%); }
+div[data-kind=int8]				{ border-color: hsl(180, 90%%, 50%%); }
+div[data-kind=int16]			{ border-color: hsl(180, 90%%, 45%%); }
+div[data-kind=int32]			{ border-color: hsl(180, 90%%, 40%%); }
+div[data-kind=int64]			{ border-color: hsl(180, 90%%, 35%%); }
+div[data-kind=int]				{ border-color: hsl(180, 75%%, 38%%); }
+div[data-kind=uint8]			{ border-color: hsl(190, 90%%, 50%%); }
+div[data-kind=uint16]			{ border-color: hsl(190, 90%%, 45%%); }
+div[data-kind=uint32]			{ border-color: hsl(190, 90%%, 40%%); }
+div[data-kind=uint64]			{ border-color: hsl(190, 90%%, 35%%); }
+div[data-kind=uint]				{ border-color: hsl(190, 75%%, 38%%); }
+div[data-kind=float32]			{ border-color: hsl(205, 70%%, 40%%); }
+div[data-kind=float64]			{ border-color: hsl(205, 70%%, 35%%); }
+div[data-kind=complex64]		{ border-color: hsl(215, 50%%, 35%%); }
+div[data-kind=complex128]		{ border-color: hsl(215, 50%%, 30%%); }
+div[data-kind=bool]				{ border-color: hsl(160, 70%%, 35%%); }
+div[data-kind=ptr]				{ border-color: hsl(30, 50%%, 60%%); }
+div[data-kind=uintptr]			{ border-color: hsl(20, 50%%, 50%%); }
+div[data-kind="unsafe.Pointer"]	{ border-color: hsl(10, 90%%, 50%%); }
+div[data-kind=array]			{ border-color: hsl(60, 90%%, 45%%); }
+div[data-kind=slice]			{ border-color: hsl(60, 40%%, 60%%); }
+div[data-kind=string]			{ border-color: hsl(120, 70%%, 30%%); }
+div[data-kind=map]				{ border-color: hsl(75, 40%%, 40%%); }
+div[data-kind=struct]			{ border-color: hsl(150, 10%%, 45%%); }
+div[data-kind=interface]		{ border-color: hsl(240, 30%%, 60%%); }
+div[data-kind=func]				{ border-color: hsl(270, 40%%, 60%%); }
+div[data-kind=chan]				{ border-color: hsl(300, 40%%, 30%%); }
 
 .fold * { display: none; }
 .fold::after { content: ' [+]'; }
