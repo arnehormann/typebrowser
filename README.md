@@ -41,7 +41,7 @@ The next type is fetched with an http-post, your program stops because it blocks
 
 For a working code example, see [example/example.go](example/example.go).
 
-For a peek at what the html output looks like, see [this demo for *reflect.StructField](http://bl.ocks.org/arnehormann/raw/5775864/).
+For a peek at what the html output looks like, see [this demo for *reflect.StructField](http://bl.ocks.org/arnehormann/raw/5780257/).
 
 Types containing others are foldable on click.
 
