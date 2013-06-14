@@ -62,39 +62,32 @@ div[data-kind]::before {
 	position: relative;
 	margin-left: 1em;
 }
-div[data-kind=int8],
-div[data-kind=int16],
-div[data-kind=int32],
-div[data-kind=int64],
-div[data-kind=int]				{ border-color: #0f808c; }
-
-div[data-kind=uint8],
-div[data-kind=uint16],
-div[data-kind=uint32],
-div[data-kind=uint64],
-div[data-kind=uint]				{ border-color: #198c6f; }
-
-div[data-kind=float32],
-div[data-kind=float64]			{ border-color: #5b8c39; }
-
-div[data-kind=complex64],
-div[data-kind=complex128]		{ border-color: #778c1b; }
-
-div[data-kind=bool]				{ border-color: #19758c; }
-div[data-kind=ptr]				{ border-color: #d96485; }
-
-div[data-kind=uintptr],
-div[data-kind="unsafe.Pointer"]	{ border-color: #d91d29; }
-
-div[data-kind=array],
-div[data-kind=slice]			{ border-color: #f29a19; }
-
-div[data-kind=string]			{ border-color: #40478c; }
-div[data-kind=map]				{ border-color: #f2C91f; }
-div[data-kind=struct]			{ border-color: #8Ab048; }
-div[data-kind=chan]				{ border-color: #9c0c40; }
-div[data-kind=interface]		{ border-color: #5d277d; }
-div[data-kind=func]				{ border-color: #7d0a72; }
+div[data-kind=int8]				{ border-color: hsl(180, 90%, 50%); }
+div[data-kind=int16]			{ border-color: hsl(180, 90%, 45%); }
+div[data-kind=int32]			{ border-color: hsl(180, 90%, 40%); }
+div[data-kind=int64]			{ border-color: hsl(180, 90%, 35%); }
+div[data-kind=int]				{ border-color: hsl(180, 75%, 38%); }
+div[data-kind=uint8]			{ border-color: hsl(190, 90%, 50%); }
+div[data-kind=uint16]			{ border-color: hsl(190, 90%, 45%); }
+div[data-kind=uint32]			{ border-color: hsl(190, 90%, 40%); }
+div[data-kind=uint64]			{ border-color: hsl(190, 90%, 35%); }
+div[data-kind=uint]				{ border-color: hsl(190, 75%, 38%); }
+div[data-kind=float32]			{ border-color: hsl(205, 70%, 40%); }
+div[data-kind=float64]			{ border-color: hsl(205, 70%, 35%); }
+div[data-kind=complex64]		{ border-color: hsl(215, 50%, 35%); }
+div[data-kind=complex128]		{ border-color: hsl(215, 50%, 30%); }
+div[data-kind=bool]				{ border-color: hsl(160, 70%, 35%); }
+div[data-kind=ptr]				{ border-color: hsl(30, 50%, 60%); }
+div[data-kind=uintptr]			{ border-color: hsl(20, 50%, 50%); }
+div[data-kind="unsafe.Pointer"]	{ border-color: hsl(10, 90%, 50%); }
+div[data-kind=array]			{ border-color: hsl(60, 90%, 45%); }
+div[data-kind=slice]			{ border-color: hsl(60, 40%, 60%); }
+div[data-kind=string]			{ border-color: hsl(120, 70%, 30%); }
+div[data-kind=map]				{ border-color: hsl(75, 40%, 40%); }
+div[data-kind=struct]			{ border-color: hsl(150, 10%, 45%); }
+div[data-kind=interface]		{ border-color: hsl(240, 30%, 60%); }
+div[data-kind=func]				{ border-color: hsl(270, 40%, 60%); }
+div[data-kind=chan]				{ border-color: hsl(300, 40%, 30%); }
 
 .fold * { display: none; }
 .fold::after { content: ' [+]'; }
@@ -115,7 +108,6 @@ div[data-kind=func]				{ border-color: #7d0a72; }
 		if t == nil {
 			return nil
 		}
-		isParent := false
 		tt := t.Type
 		Concatf(
 			`<div data-kind="%s" data-type=%q data-memsize="%d" data-typeid="%d"`,
@@ -148,7 +140,6 @@ div[data-kind=func]				{ border-color: #7d0a72; }
 				direction = "both"
 			}
 			Concat(` data-direction="` + direction + `"`)
-			isParent = true
 
 		case reflect.Func:
 			argcnt, retcnt := tt.NumIn(), tt.NumOut()
@@ -159,17 +150,11 @@ div[data-kind=func]				{ border-color: #7d0a72; }
 				expectInFunc[depth+1][1] = retcnt
 			}
 			Concatf(` data-argcount="%d" data-retcount="%d"`, argcnt, retcnt)
-			isParent = true
 
 		case reflect.Array:
 			Concatf(` data-length="%d"`, tt.Len())
-			isParent = true
 
 		case reflect.Map, reflect.Ptr, reflect.Slice, reflect.Struct, reflect.Interface:
-			isParent = true
-		}
-		if isParent {
-			Concat(` class="parent"`)
 		}
 		Concat(`>`)
 		return nil
